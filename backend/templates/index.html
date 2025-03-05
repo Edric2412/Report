@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Report Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/styles.css?v=2">
+  <!-- CKEditor 5 CDN -->
+  <script src="https://cdn.ckeditor.com/ckeditor5/38.1.1/classic/ckeditor.js"></script>
+</head>
+<body class="min-h-screen text-gray-100 relative overflow-x-hidden">
+  <div class="animated-gradient"></div>
+  <div class="fixed inset-0 bg-contain bg-no-repeat bg-center opacity-30 mix-blend-multiply" style="background-image: url('static/bg-logo.png');"></div>
+  <div class="container mx-auto px-4 py-12">
+    <div class="logo">
+      <img src="static/logo-1.png" alt="Logo" class="w-auto h-32">
+    </div>
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12 relative">
+        <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 bg-secondary/20 rounded-full blur-3xl"></div>
+        <div class="absolute -top-24 left-1/3 -translate-x-1/2 w-48 h-48 bg-primary/20 rounded-full blur-3xl"></div>
+        <h1 class="text-5xl font-['Montserrat'] font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-400 to-white bg-300% animate-gradient relative">
+          Event Report Generator
+        </h1>
+        <p class="text-gray-300 text-lg max-w-2xl mx-auto leading-relaxed">
+          Generate professional event reports with our intuitive form system. Streamline your documentation process effortlessly.
+        </p>
+      </div>
+      <div class="glass-effect rounded-2xl p-8 mb-8">
+        <form id="eventForm" action="/generate_report" method="post" enctype="multipart/form-data">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Modified Event Type: typeable input with datalist -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Event Type</label>
+              <input list="eventTypes" id="eventType" name="eventType" class="w-full bg-gray-800/80 border border-gray-700 rounded-button input-glow focus:outline-none focus:border-secondary" placeholder="Enter event type" required>
+              <datalist id="eventTypes">
+                <option value="Workshop"></option>
+                <option value="Seminar"></option>
+                <option value="Conference"></option>
+                <option value="Field Visit"></option>
+              </datalist>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Department Name</label>
+              <input type="text" name="department" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary" placeholder="Enter department name" required>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Topic</label>
+              <input type="text" name="topic" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary" placeholder="Enter topic" required>
+            </div>
+            <div id="expertNameField" class="space-y-2 hidden">
+              <label class="block text-sm font-medium">Expert Name</label>
+              <input type="text" name="expertName" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary" placeholder="Enter expert name">
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Venue</label>
+              <input type="text" name="venue" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary" placeholder="Enter venue" required>
+            </div>
+            <!-- New Event Duration Type Selection -->
+            <div class="space-y-2 md:col-span-2">
+              <label class="block text-sm font-medium">Event Duration</label>
+              <div class="flex items-center space-x-4">
+                <label class="inline-flex items-center">
+                  <input type="radio" name="eventDurationType" value="single" class="form-radio" checked>
+                  <span class="ml-2">Single Day</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input type="radio" name="eventDurationType" value="multiple" class="form-radio">
+                  <span class="ml-2">Multiple Days</span>
+                </label>
+              </div>
+            </div>
+            <!-- Single Day Fields -->
+            <div id="singleDayFields" class="md:col-span-2">
+              <div class="space-y-2">
+                <label class="block text-sm font-medium">Date</label>
+                <input type="date" name="date" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary" required>
+              </div>
+              <div class="grid grid-cols-2 gap-6 mt-4">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium">Start Time</label>
+                  <input type="time" name="startTime" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary" required>
+                </div>
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium">End Time</label>
+                  <input type="time" name="endTime" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary" required>
+                </div>
+              </div>
+            </div>
+            <!-- Multiple Day Fields -->
+            <div id="multipleDayFields" class="hidden md:col-span-2">
+              <div class="grid grid-cols-2 gap-6">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium">Start Date</label>
+                  <input type="date" name="startDate" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary">
+                </div>
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium">End Date</label>
+                  <input type="date" name="endDate" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary">
+                </div>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Faculty Coordinator</label>
+              <input type="text" name="coordinator" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary" placeholder="Enter coordinator name" required>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">Number of Participants</label>
+              <input type="number" name="participants" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary" placeholder="Enter number" required>
+            </div>
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">HOD Name</label>
+              <input type="text" name="hodName" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary" placeholder="Enter HOD name" required>
+            </div>
+          </div>
+          
+          <!-- CKEditor for Summary -->
+          <div class="space-y-2 mt-6">
+            <label class="block text-sm font-medium">Summary of the Event</label>
+            <textarea id="editor-summary" name="summary" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary" placeholder="Enter event summary" required></textarea>
+          </div>
+          
+          <!-- CKEditor for Outcome -->
+          <div class="space-y-2 mt-6">
+            <label class="block text-sm font-medium">Outcome of the Event</label>
+            <textarea id="editor-outcome" name="outcome" class="w-full bg-gray-800 border border-gray-700 rounded-button px-4 py-2.5 input-glow focus:outline-none focus:border-secondary" placeholder="Enter event outcome" required></textarea>
+          </div>
+          
+          <!-- File upload sections (unchanged) -->
+          <div class="space-y-2 mt-6">
+            <label class="block text-sm font-medium">Upload Invite Poster</label>
+            <div id="invitePosterUpload" class="upload-zone border-2 border-dashed border-gray-700/50 rounded-2xl p-8 text-center bg-gray-800/20 hover:bg-gray-800/30 transition-all duration-300 group">
+              <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <i class="ri-upload-cloud-line ri-3x text-gray-400 transition-all duration-300 group-hover:text-secondary group-hover:scale-110"></i>
+              </div>
+              <p class="text-sm text-gray-300 mb-3">Drag and drop your invite poster here or</p>
+              <button type="button" id="browseFiles1" class="text-secondary hover:text-white font-medium px-4 py-2 rounded-button border border-secondary hover:bg-secondary/20">Browse Files</button>
+              <input type="file" id="invitePoster" name="invitePoster" class="hidden" accept="image/*" multiple>
+              <div id="selectedFiles1" class="mt-4 text-left"></div>
+            </div>
+          </div>
+          <div class="space-y-2 mt-6">
+            <label class="block text-sm font-medium">Upload Action Photos</label>
+            <div id="actionPhotosUpload" class="upload-zone border-2 border-dashed border-gray-700/50 rounded-2xl p-8 text-center bg-gray-800/20 hover:bg-gray-800/30 transition-all duration-300 group">
+              <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <i class="ri-upload-cloud-line ri-3x text-gray-400 transition-all duration-300 group-hover:text-secondary group-hover:scale-110"></i>
+              </div>
+              <p class="text-sm text-gray-300 mb-3">Drag and drop your action photos here or</p>
+              <button type="button" id="browseFiles2" class="text-secondary hover:text-white font-medium px-4 py-2 rounded-button border border-secondary hover:bg-secondary/20">Browse Files</button>
+              <input type="file" id="actionPhotos" name="actionPhotos" class="hidden" accept="image/*" multiple>
+              <div id="selectedFiles2" class="mt-4 text-left"></div>
+            </div>
+          </div>
+          <div class="space-y-2 mt-6">
+            <label class="block text-sm font-medium">Upload Attendance Sheet</label>
+            <div id="attendanceSheetUpload" class="upload-zone border-2 border-dashed border-gray-700/50 rounded-2xl p-8 text-center bg-gray-800/20 hover:bg-gray-800/30 transition-all duration-300 group">
+              <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <i class="ri-upload-cloud-line ri-3x text-gray-400 transition-all duration-300 group-hover:text-secondary group-hover:scale-110"></i>
+              </div>
+              <p class="text-sm text-gray-300 mb-3">Drag and drop your attendance sheet here or</p>
+              <button type="button" id="browseFiles3" class="text-secondary hover:text-white font-medium px-4 py-2 rounded-button border border-secondary hover:bg-secondary/20">Browse Files</button>
+              <input type="file" id="attendanceSheet" name="attendanceSheet" class="hidden" accept="image/*" multiple>
+              <div id="selectedFiles3" class="mt-4 text-left"></div>
+            </div>
+          </div>
+          <div class="space-y-2 mt-6">
+            <label class="block text-sm font-medium">Upload Analysis Report</label>
+            <div id="analysisReportUpload" class="upload-zone border-2 border-dashed border-gray-700/50 rounded-2xl p-8 text-center bg-gray-800/20 hover:bg-gray-800/30 transition-all duration-300 group">
+              <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <i class="ri-upload-cloud-line ri-3x text-gray-400 transition-all duration-300 group-hover:text-secondary group-hover:scale-110"></i>
+              </div>
+              <p class="text-sm text-gray-300 mb-3">Drag and drop your analysis report here or</p>
+              <button type="button" id="browseFiles4" class="text-secondary hover:text-white font-medium px-4 py-2 rounded-button border border-secondary hover:bg-secondary/20">Browse Files</button>
+              <input type="file" id="analysisReport" name="analysisReport" class="hidden" accept="image/*" multiple>
+              <div id="selectedFiles4" class="mt-4 text-left"></div>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:justify-between items-center pt-6">
+            <button type="button" id="previewBtn" class="px-6 py-2.5 border border-secondary text-secondary hover:bg-secondary hover:text-white rounded-button transition-colors duration-300 whitespace-nowrap mb-4 sm:mb-0">
+              Preview Report
+            </button>
+            <button type="submit" class="px-8 py-2.5 border border-secondary text-secondary bg-secondary hover:bg-secondary-dark hover:text-white rounded-button transition-colors duration-300 whitespace-nowrap">
+              Generate Report
+            </button>
+          </div>
+        </form>
+      </div>
+      <div id="previewSection" class="hidden glass-effect rounded-2xl p-8 mb-8">
+        <h2 class="text-xl font-bold mb-6">Report Preview</h2>
+        <div class="w-full border border-gray-700 rounded-xl overflow-hidden mb-6">
+          <iframe id="previewFrame" class="w-full h-[600px] bg-white"></iframe>
+        </div>
+        <div id="previewContent" class="space-y-4">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="successModal" class="fixed inset-0 flex items-center justify-center hidden animate-fade-in z-50">
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+    <div class="glass-effect rounded-2xl p-8 max-w-md w-full mx-4 relative z-10">
+      <div class="text-center">
+        <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center text-secondary">
+          <i class="ri-check-line ri-3x"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Report Generated Successfully!</h3>
+        <p class="text-gray-400 mb-6">Your report has been generated and is ready for download.</p>
+        <a id="downloadButton" href="#" class="block w-full px-8 py-2.5 border border-secondary text-secondary bg-secondary hover:bg-secondary-dark hover:text-white rounded-button transition-colors duration-300 whitespace-nowrap text-center">
+          Download Report
+        </a>
+        <button id="viewReportBtn" class="w-full mt-4 px-6 py-2.5 border border-secondary text-secondary hover:bg-secondary/20 hover:text-white rounded-button transition-colors duration-300 whitespace-nowrap">
+          View Report
+        </button>
+        <button id="closeModal" class="mt-4 text-gray-400 hover:text-white">Close</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Initialize CKEditor 5 for Summary and Outcome textareas
+    let summaryEditor, outcomeEditor;
+    ClassicEditor
+      .create(document.querySelector('#editor-summary'))
+      .then(editor => {
+        summaryEditor = editor;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    ClassicEditor
+      .create(document.querySelector('#editor-outcome'))
+      .then(editor => {
+        outcomeEditor = editor;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+      
+    document.addEventListener('DOMContentLoaded', () => {
+      const eventType = document.getElementById('eventType');
+      const expertNameField = document.getElementById('expertNameField');
+      const previewBtn = document.getElementById('previewBtn');
+      const previewSection = document.getElementById('previewSection');
+      const previewFrame = document.getElementById('previewFrame');
+      const form = document.getElementById('eventForm');
+      const successModal = document.getElementById('successModal');
+      const closeModal = document.getElementById('closeModal');
+      const downloadButton = document.getElementById('downloadButton');
+      const viewReportBtn = document.getElementById('viewReportBtn');
+      
+      // Show expert name field for certain event types
+      eventType.addEventListener('change', () => {
+        const type = eventType.value.toLowerCase();
+        if (type === 'workshop' || type === 'seminar' || type === 'conference') {
+          expertNameField.classList.remove('hidden');
+        } else {
+          expertNameField.classList.add('hidden');
+        }
+      });
+      
+      // Toggle event duration fields based on selection
+      const eventDurationRadios = document.getElementsByName('eventDurationType');
+      const singleDayFields = document.getElementById('singleDayFields');
+      const multipleDayFields = document.getElementById('multipleDayFields');
+      eventDurationRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+          if (radio.value === 'single' && radio.checked) {
+            singleDayFields.classList.remove('hidden');
+            multipleDayFields.classList.add('hidden');
+          } else if (radio.value === 'multiple' && radio.checked) {
+            multipleDayFields.classList.remove('hidden');
+            singleDayFields.classList.add('hidden');
+          }
+        });
+      });
+      
+      // File upload fields configuration (same as before)
+      const fileUploadFields = [
+        { browseBtn: 'browseFiles1', inputId: 'invitePoster', displayId: 'selectedFiles1', dropZone: 'invitePosterUpload' },
+        { browseBtn: 'browseFiles2', inputId: 'actionPhotos', displayId: 'selectedFiles2', dropZone: 'actionPhotosUpload' },
+        { browseBtn: 'browseFiles3', inputId: 'attendanceSheet', displayId: 'selectedFiles3', dropZone: 'attendanceSheetUpload' },
+        { browseBtn: 'browseFiles4', inputId: 'analysisReport', displayId: 'selectedFiles4', dropZone: 'analysisReportUpload' }
+      ];
+      
+      // Global function to remove a file from an input
+      window.removeFile = function(fileIndex, inputId, displayId) {
+        const input = document.getElementById(inputId);
+        let dt = new DataTransfer();
+        for (let i = 0; i < input.files.length; i++) {
+          if (i !== fileIndex) dt.items.add(input.files[i]);
+        }
+        input.files = dt.files;
+        updateFileDisplay(input, document.getElementById(displayId));
+      }
+      
+      function updateFileDisplay(input, display) {
+        display.innerHTML = '';
+        if (input.files.length > 0) {
+          for (let i = 0; i < input.files.length; i++) {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'text-sm text-gray-300 flex items-center justify-between py-1';
+            const fileInfo = document.createElement('div');
+            fileInfo.className = 'flex items-center';
+            fileInfo.innerHTML = `<i class="ri-image-line mr-2 text-secondary"></i><span>${input.files[i].name}</span>`;
+            const deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
+            deleteBtn.className = 'text-red-500 hover:text-red-700 ml-4';
+            deleteBtn.innerHTML = '<i class="ri-close-line"></i>';
+            deleteBtn.addEventListener('click', () => {
+              removeFile(i, input.id, display.id);
+            });
+            fileItem.appendChild(fileInfo);
+            fileItem.appendChild(deleteBtn);
+            display.appendChild(fileItem);
+          }
+        }
+      }
+      
+      fileUploadFields.forEach(field => {
+        const browseBtn = document.getElementById(field.browseBtn);
+        const input = document.getElementById(field.inputId);
+        const display = document.getElementById(field.displayId);
+        const dropZone = document.getElementById(field.dropZone);
+        browseBtn.addEventListener('click', () => input.click());
+        input.addEventListener('change', () => updateFileDisplay(input, display));
+        dropZone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          dropZone.classList.add('border-secondary/50');
+        });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-secondary/50'));
+        dropZone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          dropZone.classList.remove('border-secondary/50');
+          if (e.dataTransfer.files.length) {
+            input.files = e.dataTransfer.files;
+            input.dispatchEvent(new Event('change'));
+          }
+        });
+      });
+      
+      // Preview button handler
+      previewBtn.addEventListener('click', () => {
+        // Update CKEditor instances before form submission
+        if (summaryEditor && outcomeEditor) {
+          summaryEditor.updateSourceElement();
+          outcomeEditor.updateSourceElement();
+        }
+        if (!validateForm()) return;
+        const formData = new FormData(form);
+        previewSection.classList.remove('hidden');
+        updateSimplePreview();
+        fetch('/preview_report', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('Server could not generate preview');
+          return response.text();
+        })
+        .then(html => {
+          previewFrame.srcdoc = html;
+        })
+        .catch(error => console.warn('Using simple preview instead:', error));
+        previewSection.scrollIntoView({ behavior: 'smooth' });
+      });
+      
+      function validateForm() {
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
+        requiredFields.forEach(field => {
+          if (!field.value.trim()) {
+            field.classList.add('border-red-500');
+            isValid = false;
+          } else {
+            field.classList.remove('border-red-500');
+          }
+        });
+        return isValid;
+      }
+      
+      function updateSimplePreview() {
+        const previewContent = document.getElementById('previewContent');
+        const formData = new FormData(form);
+        let previewHTML = '<h3 class="text-lg font-semibold mb-4">Form Data Summary</h3>';
+        formData.forEach((value, key) => {
+          if (value && !key.includes('[]') && key !== 'invitePoster' && key !== 'actionPhotos' && key !== 'attendanceSheet' && key !== 'analysisReport') {
+            previewHTML += `
+              <div class="border-b border-gray-700 pb-2">
+                <span class="text-gray-400">${key}:</span>
+                <span class="ml-2">${value}</span>
+              </div>
+            `;
+          }
+        });
+        fileUploadFields.forEach(field => {
+          const input = document.getElementById(field.inputId);
+          if (input.files.length > 0) {
+            previewHTML += `
+              <div class="border-b border-gray-700 pb-2">
+                <span class="text-gray-400">${field.inputId}:</span>
+                <span class="ml-2">${input.files.length} file(s) selected</span>
+              </div>
+            `;
+          }
+        });
+        previewContent.innerHTML = previewHTML;
+      }
+      
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (summaryEditor && outcomeEditor) {
+          summaryEditor.updateSourceElement();
+          outcomeEditor.updateSourceElement();
+        }
+        if (!validateForm()) return;
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="ri-loader-2-line animate-spin mr-2"></i>Processing...';
+        submitBtn.disabled = true;
+        const formData = new FormData(form);
+        fetch('/generate_report', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('Error generating report');
+          return response.json();
+        })
+        .then(data => {
+          submitBtn.innerHTML = originalBtnText;
+          submitBtn.disabled = false;
+          if(data.error) {
+            alert(data.error);
+            return;
+          }
+          downloadButton.href = data.download_url;
+          successModal.classList.remove('hidden');
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          submitBtn.innerHTML = originalBtnText;
+          submitBtn.disabled = false;
+          alert('Error generating report. Please try again.');
+        });
+      });
+      
+      closeModal.addEventListener('click', () => successModal.classList.add('hidden'));
+      viewReportBtn.addEventListener('click', () => {
+        successModal.classList.add('hidden');
+        previewSection.classList.remove('hidden');
+        previewSection.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>

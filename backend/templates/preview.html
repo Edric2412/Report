@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=8.5in, initial-scale=1.0">
+  <title>Report Preview</title>
+  <style>
+    /* Container to simulate a printed page */
+    .page {
+      width: 8.5in;
+      min-height: 11in;
+      margin: 0 auto 20px auto;
+      padding: 0.5in;
+      box-sizing: border-box;
+      background: white;
+      border: 1px solid #ccc;
+      position: relative;
+    }
+    body {
+      background: #ddd;
+      padding: 20px;
+    }
+    .event-header {
+      text-align: center;
+      font-size: 24pt;
+      margin-bottom: 20pt;
+      color: #2E5496;
+      font-weight: bold;
+    }
+    .section-title {
+      font-size: 18pt;
+      color: #2E5496;
+      margin: 20pt 0 10pt;
+      border-bottom: 2px solid #2E5496;
+      padding-bottom: 4pt;
+    }
+    .details-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15pt 0;
+      font-size: 11pt;
+      border: 1px solid #cccccc;
+    }
+    .details-table td {
+      padding: 8px;
+      border: 1px solid #cccccc;
+      vertical-align: top;
+    }
+    .detail-label {
+      font-weight: bold;
+      width: 25%;
+      background-color: #f8f8f8;
+    }
+    .content-section {
+      margin: 15pt 0;
+      font-size: 11pt;
+      line-height: 1.5;
+    }
+    /* The signature footer is absolutely positioned at the bottom */
+    .footer-signatures {
+      position: absolute;
+      bottom: 0.5in;
+      left: 0.5in;
+      right: 0.5in;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11pt;
+      font-weight: bold;
+    }
+    /* For print, enforce page breaks after each page */
+    @media print {
+      .page {
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Page 1: Event Details -->
+  <div class="page" id="page1">
+    <div class="event-header">{{ report.eventType|upper }} REPORT</div>
+    <div class="section-title">Event Details</div>
+    <table class="details-table">
+      <tr>
+        <td class="detail-label">Department</td>
+        <td>{{ report.department }}</td>
+      </tr>
+      <tr>
+        <td class="detail-label">Topic</td>
+        <td>{{ report.topic }}</td>
+      </tr>
+      {% if report.expertName and report.expertName != "N/A" %}
+      <tr>
+        <td class="detail-label">Expert Name</td>
+        <td>{{ report.expertName }}</td>
+      </tr>
+      {% endif %}
+      <tr>
+        <td class="detail-label">Venue</td>
+        <td>{{ report.venue }}</td>
+      </tr>
+      <tr>
+        <td class="detail-label">Event Date/Time</td>
+        <td>{{ report.dateTime }}</td>
+      </tr>
+      <tr>
+        <td class="detail-label">Faculty Coordinator</td>
+        <td>{{ report.coordinator }}</td>
+      </tr>
+      <tr>
+        <td class="detail-label">Participants</td>
+        <td>{{ report.participants }}</td>
+      </tr>
+      <tr>
+        <td class="detail-label">HOD Name</td>
+        <td>{{ report.hodName }}</td>
+      </tr>
+    </table>
+  </div>
+  
+  <!-- Page 2: Summary -->
+  <div class="page" id="page2">
+    <div class="section-title">Summary</div>
+    <div class="content-section">{{ report.summary|safe }}</div>
+  </div>
+  
+  <!-- Page 3: Outcome -->
+  <div class="page" id="page3">
+    <div class="section-title">Outcome</div>
+    <div class="content-section">{{ report.outcome|safe }}</div>
+  </div>
+  
+  <!-- Page 4: Signature Footer -->
+  <div class="page" id="page4">
+    <div class="footer-signatures">
+      <div>Signature of Faculty Coordinator</div>
+      <div>Signature of HOD</div>
+    </div>
+  </div>
+</body>
+</html>

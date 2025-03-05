@@ -1,0 +1,195 @@
+:where([class^="ri-"])::before { content: "\f3c2"; }
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient {
+  background: linear-gradient(-45deg, #0c1130, #08245d, #013459, #003a3c);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.05),
+    0 8px 24px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.glass-effect:hover {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.08),
+    0 12px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-glow:focus {
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.1),
+              0 0 20px rgba(14, 165, 233, 0.4);
+  transition: all 0.3s ease;
+}
+
+select, input, textarea {
+  padding: 0.75rem 1rem !important;
+  transition: all 0.3s ease;
+}
+
+button {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.upload-zone {
+  transition: all 0.3s ease;
+}
+
+.upload-zone:hover {
+  border-color: rgba(14, 165, 233, 0.5);
+  box-shadow: inset 0 0 15px rgba(14, 165, 233, 0.1);
+}
+
+.upload-zone:hover i {
+  color: rgba(14, 165, 233, 0.8);
+  transform: scale(1.1);
+}
+
+.dropdown-arrow {
+  transition: transform 0.3s ease;
+}
+
+select:focus + div .dropdown-arrow {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-in-out;
+}
+
+/* ===============================
+   CKEditor 5 Overrides
+   ===============================
+   These rules override the default CKEditor 5 design so that the
+   editing area, toolbar, and dropdown panels match your dark theme.
+   Background: #2d3748 (bg-gray-800)
+   Border: 1px solid #4a5568 (border-gray-700)
+   Border-radius: 0.375rem (rounded-button)
+   Padding: 0.75rem 1rem
+   Text: #e2e8f0 (text-gray-300)
+================================== */
+.ck-editor__editable_inline {
+    background-color: #1F2937 !important;
+    border: 1px solid #4a5568 !important;
+    border-radius: 0.375rem !important;
+    padding: 0.75rem 1rem !important;
+    color: #e2e8f0 !important;
+    font-size: 1rem;
+}
+
+.ck.ck-editor__top {
+    background-color: #1F2937 !important;
+    border: 1px solid #4a5568 !important;
+    border-bottom: none !important;
+    border-top-left-radius: 0.375rem !important;
+    border-top-right-radius: 0.375rem !important;
+}
+
+.ck.ck-toolbar {
+    background-color: #2d3748 !important;
+    border: 1px solid #4a5568 !important;
+    border-bottom: none !important;
+    border-top-left-radius: 0.375rem !important;
+    border-top-right-radius: 0.375rem !important;
+}
+
+.ck.ck-button {
+    background-color: transparent !important;
+    color: #e2e8f0 !important;
+    border: none !important;
+}
+
+.ck.ck-button:hover {
+    background-color: rgba(237,242,247,0.1) !important;
+}
+
+.ck.ck-dropdown__panel,
+.ck.ck-dropdown__panel * {
+    color: #5683cc !important;
+}
+.ck.ck-dropdown__panel a {
+    color: #5683cc !important;
+}
+
+/* =========================================
+   Logo & Responsive Header Adjustments
+========================================= */
+.logo {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+}
+
+@media (max-width: 640px) {
+  .logo {
+    position: relative !important;
+    display: block;
+    margin: 0 auto 1rem auto;
+    top: 0;
+    left: 0;
+    width: 150px;
+  }
+  .text-center {
+    margin-top: 4rem;
+  }
+  .container {
+    padding-top: 4rem;
+  }
+  #previewFrame {
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+  .text-4xl {
+    font-size: 2rem;
+  }
+}
