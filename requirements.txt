@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+python-docx
+python-multipart
+jinja2
+docx2pdf
+bs4
